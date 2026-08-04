@@ -26,7 +26,8 @@ async def fact(message: types.Message, session: aiohttp.client.ClientSession):
 
 @router.message(Command('currency'))
 async def currency(message: types.Message, session: aiohttp.client.ClientSession):
-    await message.answer('currency')
+    data = await services.get_currency(session)
+    await message.answer('\n\n'.join([f"{el['Name']}    {el['Value']} ₽" for el in data]))
 
 
 @router.message(Command('digest'))

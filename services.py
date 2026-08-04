@@ -2,7 +2,7 @@ import asyncio
 import aiohttp
 import feedparser
 
-from urls import HABR_URL, FACTS_URL
+from urls import HABR_URL, FACTS_URL, CENTRAL_BANK_URL
 from utils import translate
 
 
@@ -21,3 +21,9 @@ async def get_fact(session: aiohttp.ClientSession):
 
     rus_text = await translate(eng_text, session)
     return rus_text['translations'][0]['text']
+
+
+async def get_currency(session: aiohttp.ClientSession):
+    async with session.get(CENTRAL_BANK_URL) as response:
+        response.raise_for_status()
+        return [(await response.json(content_type=None))['Valute'][key] for key in ['USD', 'EUR']]
