@@ -1,0 +1,1 @@
+DEEPL_API_URL = "https://api-free.deepl.com/v2/translate"
