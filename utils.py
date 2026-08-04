@@ -24,4 +24,5 @@ async def translate(text: str, session: aiohttp.ClientSession):
         "target_lang": "RU"
     }
     async with session.post(url=DEEPL_API_URL, headers=headers, data=data) as response:
+        response.raise_for_status()
         return await response.json()
