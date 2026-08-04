@@ -21,7 +21,7 @@ async def news(message: types.Message, session: aiohttp.client.ClientSession):
 
 @router.message(Command('fact'))
 async def fact(message: types.Message, session: aiohttp.client.ClientSession):
-    await message.answer('fact')
+    await message.answer(await services.get_fact(session))
 
 
 @router.message(Command('currency'))
