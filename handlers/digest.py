@@ -31,13 +31,13 @@ async def currency(message: types.Message, session: aiohttp.client.ClientSession
 
 @router.message(Command('digest'))
 async def digest(message: types.Message, session: aiohttp.client.ClientSession):
-    news_task = asyncio.create_task(services.get_news(session))
-    fact_task = asyncio.create_task(services.get_fact(session))
-    currency_task = asyncio.create_task(services.get_currency(session))
+    news_task = asyncio.create_task(safe_fetch(services.get_news(session)))
+    fact_task = asyncio.create_task(safe_fetch(services.get_fact(session)))
+    currency_task = asyncio.create_task(safe_fetch(services.get_currency(session)))
 
     data = await asyncio.gather(news_task, fact_task, currency_task)
 
     await message.answer(
-        format_digest(data),
+        format_digest(list(data)),
         parse_mode='html'
     )
