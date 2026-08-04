@@ -1,9 +1,11 @@
+import asyncio
+
 import aiohttp
 from aiogram import Router, types
 from aiogram.filters import Command
 
 import services
-from formatting import format_news, format_currency
+from formatting import format_news, format_currency, format_digest
 from utils import safe_fetch
 
 router = Router()
@@ -29,4 +31,13 @@ async def currency(message: types.Message, session: aiohttp.client.ClientSession
 
 @router.message(Command('digest'))
 async def digest(message: types.Message, session: aiohttp.client.ClientSession):
-    await message.answer('digest')
+    news_task = asyncio.create_task(services.get_news(session))
+    fact_task = asyncio.create_task(services.get_fact(session))
+    currency_task = asyncio.create_task(services.get_currency(session))
+
+    data = await asyncio.gather(news_task, fact_task, currency_task)
+
+    await message.answer(
+        format_digest(data),
+        parse_mode='html'
+    )
