@@ -1,9 +1,9 @@
 import aiohttp
 from aiogram import Router, types
 from aiogram.filters import Command
-from aiogram.utils.formatting import Text, TextLink, as_line
 
 import services
+from formatting import format_news, format_currency
 from utils import safe_fetch
 
 router = Router()
@@ -12,10 +12,7 @@ router = Router()
 @router.message(Command('news'))
 async def news(message: types.Message, session: aiohttp.client.ClientSession):
     data = await safe_fetch(services.get_news(session))
-    text = Text(
-        'Последние новости:\n\n',
-        *[as_line(as_line(TextLink(el['title'], url=el['link']))) for el in data],
-    )
+    text = format_news(data)
     await message.answer(**text.as_kwargs())
 
 
@@ -27,7 +24,7 @@ async def fact(message: types.Message, session: aiohttp.client.ClientSession):
 @router.message(Command('currency'))
 async def currency(message: types.Message, session: aiohttp.client.ClientSession):
     data = await services.get_currency(session)
-    await message.answer('\n\n'.join([f"{el['Name']}    {el['Value']} ₽" for el in data]))
+    await message.answer(format_currency(data))
 
 
 @router.message(Command('digest'))
