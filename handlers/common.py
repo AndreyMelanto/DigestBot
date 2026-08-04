@@ -7,9 +7,9 @@ router = Router()
 
 @router.message(Command('start'))
 async def start(message: types.Message, session: aiohttp.client.ClientSession):
-    await message.answer('start')
+    await message.answer('Это жоски бот\n\n/help - список команд')
 
 
 @router.message(Command('help'))
 async def help_(message: types.Message, session: aiohttp.client.ClientSession):
-    await message.answer('help')
+    await message.answer('/news - последние пять новостей с Хабра\n/fact - рандомный факт\n/currency - курсы доллара и евро\n/digest - ПОЛНЫЙ ЖОСКИЙ ДАЙДЖЕСТ')
