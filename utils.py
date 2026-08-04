@@ -2,16 +2,21 @@ import asyncio
 import aiohttp
 
 from config import DEEPL_API_KEY
-from urls import DEEPL_API_URL
+from endpoints import DEEPL_API_URL
+
+
+class FetchError:
+    def __init__(self, message):
+        self.message = message
 
 
 async def safe_fetch(coro, timeout: float = 6.7):
     try:
         return await asyncio.wait_for(coro, timeout=timeout)
     except asyncio.TimeoutError:
-        return {'error': 'timed out'}
+        return FetchError(f"Timed out while fetching {coro.__name__}")
     except aiohttp.ClientError as e:
-        return {'error': str(e)}
+        return FetchError(str(e))
 
 
 async def translate(text: str, session: aiohttp.ClientSession):

@@ -2,8 +2,8 @@ import asyncio
 import aiohttp
 import feedparser
 
-from urls import HABR_URL, FACTS_URL, CENTRAL_BANK_URL
-from utils import translate
+from endpoints import HABR_URL, FACTS_URL, CENTRAL_BANK_URL
+from utils import translate, safe_fetch
 
 
 async def get_news(session: aiohttp.ClientSession):
@@ -19,7 +19,7 @@ async def get_fact(session: aiohttp.ClientSession):
         response.raise_for_status()
         eng_text = (await response.json())['text']
 
-    rus_text = await translate(eng_text, session)
+    rus_text = await safe_fetch(translate(eng_text, session))
     return rus_text['translations'][0]['text']
 
 
