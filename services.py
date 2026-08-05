@@ -19,7 +19,7 @@ async def get_fact(session: aiohttp.ClientSession):
         response.raise_for_status()
         eng_text = (await response.json())['text']
 
-    rus_text = await safe_fetch(translate(eng_text, session))
+    rus_text = await translate(eng_text, session)
     return rus_text['translations'][0]['text']
 
 

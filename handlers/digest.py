@@ -5,7 +5,7 @@ from aiogram import Router, types
 from aiogram.filters import Command
 
 import services
-from formatting import format_news, format_currency, format_digest
+from formatting import format_news, format_currency, format_digest, format_fact
 from utils import safe_fetch
 
 router = Router()
@@ -20,7 +20,7 @@ async def news(message: types.Message, session: aiohttp.client.ClientSession):
 
 @router.message(Command('fact'))
 async def fact(message: types.Message, session: aiohttp.client.ClientSession):
-    await message.answer(await safe_fetch(services.get_fact(session)))
+    await message.answer(format_fact(await safe_fetch(services.get_fact(session))))
 
 
 @router.message(Command('currency'))
